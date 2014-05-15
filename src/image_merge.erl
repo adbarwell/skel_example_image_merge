@@ -120,3 +120,23 @@ mapMergePipeFarm(X) ->
     skel:do([{pipe, [{farm, [{seq,fun ?MODULE:readImage/1}], 8},
 		     {farm, [{seq, fun ?MODULE:convertMerge/1}], 8}]}], 
 	    imageList(X)).
+
+-spec mapMergePipeMap(non_neg_integer()) -> [{[binary()], integer(), string()}].
+
+mapMergePipeMap(X) ->
+    skel:do([{pipe, [{map, [{seq,fun ?MODULE:readImage/1}]},
+		     {map, [{seq, fun ?MODULE:convertMerge/1}]}]}], 
+	    imageList(X)).
+
+-spec mapMergeMap(non_neg_integer()) -> [{[binary()], integer(), string()}].
+
+mapMergeMap(X) ->
+    skel:do([{map, [{seq, fun(Y) -> convertMerge(readImage(Y)) end}]}], 
+	    imageList(X)).
+
+-spec mapMergeMapPipe(non_neg_integer()) -> [{[binary()], integer(), string()}].
+
+mapMergeMapPipe(X) ->
+    skel:do([{map, [{pipe, [{seq, fun ?MODULE:readImage/1}, 
+			    {seq, fun ?MODULE:convertMerge/1}]}]}],
+	    imageList(X)).
