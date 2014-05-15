@@ -89,3 +89,9 @@ convertMerge({R, R2, F1, F2, Name}) ->
 
 merge(X) ->
     [convertMerge(readImage(Y)) || Y <- imageList(X)].
+
+-spec mergeFarm(non_neg_integer()) -> [{[binary()], integer(), string()}].
+
+mergeFarm(X) ->
+    skel:run([{farm, [{seq, fun (Y) -> convertMerge(readImage(Y)) end}],
+               8}],imageList(X)).
