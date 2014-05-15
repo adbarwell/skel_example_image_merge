@@ -2,7 +2,7 @@
 
 -include_lib("../../erlang/erl_img/include/erl_img.hrl").
 
--export([merge/1,mergeFarm/1,mergeFarmPipe/1,readImage/1,convertMerge/1,mapMerge/1,mapMergePipe/1,mapMergePipeFarm/1]).
+-export([merge/1,readImage/1,convertMerge/1,mergePipeFarm/1]).
 
 %%------------------------------------------------------------------------------
 %% Worker Utility Functions
@@ -90,53 +90,9 @@ convertMerge({R, R2, F1, F2, Name}) ->
 merge(X) ->
     [convertMerge(readImage(Y)) || Y <- imageList(X)].
 
--spec mergeFarm(non_neg_integer()) -> [{[binary()], integer(), string()}].
+-spec mergePipeFarm(non_neg_integer()) -> [{[binary()], integer(), string()}].
 
-mergeFarm(X) ->
-    skel:do([{farm, [{seq, fun (Y) -> convertMerge(readImage(Y)) end}],
-               8}],imageList(X)).
-
--spec mergeFarmPipe(non_neg_integer()) -> [{[binary()], integer(), string()}].
-
-mergeFarmPipe(X) ->
-    skel:do([{farm, [{pipe, [{seq, fun ?MODULE:readImage/1}, 
-			     {seq, fun ?MODULE:convertMerge/1}]}], 8}],
-	     imageList(X)).
-
--spec mapMerge(non_neg_integer()) -> [{[binary()], integer(), string()}].
-
-mapMerge(X) ->
-    lists:map(fun(Y) -> convertMerge(readImage(Y)) end, imageList(X)).
-
--spec mapMergePipe(non_neg_integer()) -> [{[binary()], integer(), string()}].
-
-mapMergePipe(X) ->
-    skel:do([{pipe, [{seq, fun ?MODULE:readImage/1}, 
-		     {seq, fun ?MODULE:convertMerge/1}]}], imageList(X)).
-
--spec mapMergePipeFarm(non_neg_integer()) -> [{[binary()], integer(), string()}].
-
-mapMergePipeFarm(X) ->
+mergePipeFarm(X) ->
     skel:do([{pipe, [{farm, [{seq,fun ?MODULE:readImage/1}], 8},
 		     {farm, [{seq, fun ?MODULE:convertMerge/1}], 8}]}], 
-	    imageList(X)).
-
--spec mapMergePipeMap(non_neg_integer()) -> [{[binary()], integer(), string()}].
-
-mapMergePipeMap(X) ->
-    skel:do([{pipe, [{map, [{seq,fun ?MODULE:readImage/1}]},
-		     {map, [{seq, fun ?MODULE:convertMerge/1}]}]}], 
-	    imageList(X)).
-
--spec mapMergeMap(non_neg_integer()) -> [{[binary()], integer(), string()}].
-
-mapMergeMap(X) ->
-    skel:do([{map, [{seq, fun(Y) -> convertMerge(readImage(Y)) end}]}], 
-	    imageList(X)).
-
--spec mapMergeMapPipe(non_neg_integer()) -> [{[binary()], integer(), string()}].
-
-mapMergeMapPipe(X) ->
-    skel:do([{map, [{pipe, [{seq, fun ?MODULE:readImage/1}, 
-			    {seq, fun ?MODULE:convertMerge/1}]}]}],
 	    imageList(X)).
