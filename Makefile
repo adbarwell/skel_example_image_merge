@@ -14,5 +14,5 @@ console: compile
 types:
 	@typer src/*.erl
 
-dialyzer:
+typecheck:
 	@dialyzer src/*.erl
