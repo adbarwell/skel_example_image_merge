@@ -2,7 +2,7 @@
 
 -include_lib("../../erlang/erl_img/include/erl_img.hrl").
 
--export([merge/1]).
+-export([merge/1,mergeFarm/1,mergeFarmPipe/1,readImage/1,convertMerge/1]).
 
 %%------------------------------------------------------------------------------
 %% Worker Utility Functions
@@ -93,5 +93,12 @@ merge(X) ->
 -spec mergeFarm(non_neg_integer()) -> [{[binary()], integer(), string()}].
 
 mergeFarm(X) ->
-    skel:run([{farm, [{seq, fun (Y) -> convertMerge(readImage(Y)) end}],
+    skel:do([{farm, [{seq, fun (Y) -> convertMerge(readImage(Y)) end}],
                8}],imageList(X)).
+
+-spec mergeFarmPipe(non_neg_integer()) -> [{[binary()], integer(), string()}].
+
+mergeFarmPipe(X) ->
+    skel:do([{farm, [{pipe, [{seq, fun ?MODULE:readImage/1}, 
+			     {seq, fun ?MODULE:convertMerge/1}]}], 8}],
+	     imageList(X)).

@@ -1,4 +1,4 @@
-.PHONY: all compile clean
+.PHONY: all compile clean types typecheck
 
 all: compile
 
@@ -10,3 +10,9 @@ clean:
 
 console: compile
 	@exec erl -args_file ./priv/defaults.args
+
+types:
+	@typer src/*.erl
+
+dialyzer:
+	@dialyzer src/*.erl
