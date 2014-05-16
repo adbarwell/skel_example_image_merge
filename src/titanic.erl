@@ -24,7 +24,7 @@
 %% Macros
 
 -define(NTimes, 3).
--define(NImages, 2). 
+-define(NImages, 100). 
 
 %%------------------------------------------------------------------------------
 %% Internal Utility Functions
@@ -44,7 +44,7 @@ speedup(TSeq) ->
 %%------------------------------------------------------------------------------
 %% Internal Interface Functions 
 
--spec run_examples(non_neg_integer()) -> ok.
+-spec run_examples(non_neg_integer()) -> done.
 
 run_examples(Cores) ->
     erlang:system_flag(schedulers_online, Cores),
@@ -53,16 +53,30 @@ run_examples(Cores) ->
     TSeq = time(fun image_merge:merge/1),
     ?print(TSeq),
     Speedup = speedup(TSeq),
+
+    F = fun(Fun) ->
+		?print(Fun),
+		TMP = time(Fun),
+		?print(TMP),
+		SMP = Speedup(TMP),
+		?print(SMP)
+	end,
+
+    lists:map(F, [fun image_merge:mergePipe/1,
+		  fun image_merge:mergePipeFarm/1,
+		  fun image_merge:mergeFarm/1,
+		  fun image_merge:mergeFarmPipe/1,
+		  fun image_merge:mergeMap/1,
+		  fun image_merge:mergePipeMap/1,
+		  fun image_merge:mergeMapPipe/1,
+		  fun image_merge:mergePipeCluster/1]),
+    done.
     
-    TMPF = time(fun image_merge:mergePipeFarm/1),
-    ?print(TMPF),
-    SMPF = Speedup(TMPF),
-    ?print(SMPF).
 
 %%------------------------------------------------------------------------------
 %% Interface Functions
 
--spec run() -> ok.
+-spec run() -> done.
 
 run() ->
-    run_examples(4).
+    run_examples(24).
