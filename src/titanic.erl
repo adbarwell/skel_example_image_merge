@@ -44,32 +44,38 @@ speedup(TSeq) ->
 %%------------------------------------------------------------------------------
 %% Internal Interface Functions 
 
+-spec run_all_examples() -> [done].
+
+run_all_examples() ->
+    [run_examples(X) || X <- [24, 20, 16, 12, 8, 4, 2, 1]].
+
 -spec run_examples(non_neg_integer()) -> done.
 
 run_examples(Cores) ->
     erlang:system_flag(schedulers_online, Cores),
     io:format("Running Examples on ~p cores.~n", [Cores]),
     
-    TSeq = time(fun image_merge:merge/1),
-    ?print(TSeq),
-    Speedup = speedup(TSeq),
+    %% TSeq = time(fun image_merge:merge/1),
+    %% ?print(TSeq),
+    %% Speedup = speedup(TSeq),g
 
     F = fun(Fun) ->
 		?print(Fun),
 		TMP = time(Fun),
-		?print(TMP),
-		SMP = Speedup(TMP),
-		?print(SMP)
+		?print(TMP)
+		%% SMP = Speedup(TMP),
+		%% ?print(SMP)
 	end,
 
     lists:map(F, [fun image_merge:mergePipe/1,
 		  fun image_merge:mergePipeFarm/1,
 		  fun image_merge:mergeFarm/1,
 		  fun image_merge:mergeFarmPipe/1,
-		  fun image_merge:mergeMap/1,
-		  fun image_merge:mergePipeMap/1,
-		  fun image_merge:mergeMapPipe/1,
-		  fun image_merge:mergePipeCluster/1]),
+		  %% fun image_merge:mergeMap/1,
+		  %% fun image_merge:mergePipeMap/1,
+		  %% fun image_merge:mergeMapPipe/1,
+		  %% fun image_merge:mergePipeCluster/1
+		 ]),
     done.
     
 
@@ -79,4 +85,4 @@ run_examples(Cores) ->
 -spec run() -> done.
 
 run() ->
-    run_examples(24).
+    run_all_examples().
