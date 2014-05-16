@@ -32,6 +32,8 @@
 time(Fun) ->
     time(Fun, [?NImages]).
 
+time(Fun, once) ->
+    [_, _, _, _, {mean, T}, _] = sk_profile:benchmark(Fun, Args, 1);
 time(Fun, Args) ->
     [_, _, _, _, {mean, T}, _] = sk_profile:benchmark(Fun, Args, ?NTimes),
     T.
@@ -44,10 +46,14 @@ speedup(TSeq) ->
 %%------------------------------------------------------------------------------
 %% Internal Interface Functions 
 
--spec run_all_examples() -> [done].
+-spec run_all_examples() -> done.
 
 run_all_examples() ->
-    [run_examples(X) || X <- [24, 20, 16, 12, 8, 4, 2, 1]].
+    [run_examples(X) || X <- [24, 20, 16, 12, 8, 4, 2, 1]],
+    ?print(Fun),
+    TMP = time(Fun, once),
+    ?print(TMP),
+    done.
 
 -spec run_examples(non_neg_integer()) -> done.
 
@@ -67,10 +73,10 @@ run_examples(Cores) ->
 		%% ?print(SMP)
 	end,
 
-    lists:map(F, [fun image_merge:mergePipe/1,
+    lists:map(F, [%% fun image_merge:mergePipe/1,
 		  fun image_merge:mergePipeFarm/1,
 		  fun image_merge:mergeFarm/1,
-		  fun image_merge:mergeFarmPipe/1,
+		  fun image_merge:mergeFarmPipe/1
 		  %% fun image_merge:mergeMap/1,
 		  %% fun image_merge:mergePipeMap/1,
 		  %% fun image_merge:mergeMapPipe/1,
