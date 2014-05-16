@@ -33,9 +33,13 @@ time(Fun) ->
     time(Fun, [?NImages]).
 
 time(Fun, once) ->
-    [_, _, _, _, {mean, T}, _] = sk_profile:benchmark(Fun, Args, 1);
+    time(Fun, [?NImages], once);
 time(Fun, Args) ->
     [_, _, _, _, {mean, T}, _] = sk_profile:benchmark(Fun, Args, ?NTimes),
+    T.
+
+time(Fun, Args, once) ->
+    [_, _, _, _, {mean, T}, _] = sk_profile:benchmark(Fun, Args, 1),
     T.
 
 speedup(TSeq) ->
