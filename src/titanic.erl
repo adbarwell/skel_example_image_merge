@@ -54,6 +54,8 @@ speedup(TSeq) ->
 
 run_all_examples() ->
     [run_examples(X) || X <- [24, 20, 16, 12, 8, 4, 2, 1]],
+
+    Fun = fun image_merge:mergePipe/1,
     ?print(Fun),
     TMP = time(Fun, once),
     ?print(TMP),
