@@ -90,6 +90,15 @@ run_examples(Cores) ->
 		 ]),
     done.
     
+run_manual_examples() ->
+    [run_manual_example(X) || X <- [24, 20, 16, 12, 8, 4, 2, 1]],
+    done.
+
+run_manual_example(Cores) ->
+    erlang:system_flag(schedulers_online, Cores),
+    io:format("Running Examples on ~p cores.~n", [Cores]),
+    Time = time(fun image_merge:manualMerge/1),
+    ?print(Time).
 
 %%------------------------------------------------------------------------------
 %% Interface Functions
@@ -97,4 +106,5 @@ run_examples(Cores) ->
 -spec run() -> done.
 
 run() ->
-    run_all_examples().
+    %% run_all_examples().
+    run_manual_examples().

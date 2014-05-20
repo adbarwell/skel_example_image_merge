@@ -6,7 +6,13 @@
 	 convertMerge/1,
 	 decomp/1,
 	 recomp/1,
+	 collectAllImages/3,
+	 convertAllImages/2,
+	 readAllImages/2,
+	 readImageWrapper/2,
+	 convertMergeWrapper/2,
 	 merge/1,
+	 manualMerge/1,
 	 mergePipe/1,
 	 mergePipeFarm/1,
 	 mergePipeMap/1,
@@ -74,6 +80,11 @@ recomp(Parts) ->
 
   {Img, Len, Name}.
 
+readImageWrapper(Image, NextPid) ->
+  NextPid ! {image, readImage(Image)}.
+
+convertMergeWrapper(Image, NextPid) ->
+  NextPid ! {merged, convertMerge(Image)}.
 
 %%------------------------------------------------------------------------------
 %% Worker Interface Functions 
@@ -114,6 +125,29 @@ convertMerge({R, R2, F1, F2, Name}) ->
 
     {Result, length(R), Name}.
 
+readAllImages([], _NextPid) ->
+  ok;
+readAllImages([Image | Images], NextPid) ->
+  spawn(image_merge, readImageWrapper, [Image, NextPid]),
+  readAllImages(Images, NextPid).
+
+convertAllImages(0, _NextPid) ->
+  ok;
+convertAllImages(N, NextPid) ->
+  receive
+    {image, Image} ->
+     spawn(image_merge, convertMergeWrapper, [Image, NextPid]),
+     convertAllImages(N-1, NextPid)
+end.
+
+collectAllImages(0, NextPid, MergedImages) ->
+  NextPid ! {done, MergedImages};
+collectAllImages(N, NextPid, Acc) ->
+  receive
+    {merged, Image} ->
+     collectAllImages(N-1, NextPid, [Image | Acc])
+end.
+
 %%------------------------------------------------------------------------------
 %% Interface Functions 
 
@@ -121,6 +155,20 @@ convertMerge({R, R2, F1, F2, Name}) ->
 
 merge(X) ->
     [convertMerge(readImage(Y)) || Y <- imageList(X)].
+
+manualParMerge(Images) ->
+  CPid = spawn(image_merge, collectAllImages,
+                         [length(Images), self(), []]),
+  MPid = spawn(image_merge, convertAllImages,
+                          [length(Images), CPid]),
+  readAllImages(Images, MPid),
+  receive
+    {done, MergedImages} ->
+     MergedImages
+  end.
+
+manualMerge(X) ->
+    manualParMerge(imageList(X)).
 
 mergeFarm(X) ->
     skel:do([{farm, [{seq, fun (Y) -> convertMerge(readImage(Y)) end}],
