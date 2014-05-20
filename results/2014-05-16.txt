@@ -1,0 +1,112 @@
+src/titanic.erl:45: Warning: function speedup/1 is unused
+Eshell V5.10.3  (abort with ^G)
+1> Running Examples on 24 cores.
+titanic:75
+  "Fun": #Fun<image_merge.mergePipeFarm.1>
+titanic:77
+  "TMP": 48950138.333333336
+titanic:75
+  "Fun": #Fun<image_merge.mergeFarm.1>
+titanic:77
+  "TMP": 50887362.666666664
+titanic:75
+  "Fun": #Fun<image_merge.mergeFarmPipe.1>
+titanic:77
+  "TMP": 59025927.666666664
+Running Examples on 20 cores.
+titanic:75
+  "Fun": #Fun<image_merge.mergePipeFarm.1>
+titanic:77
+  "TMP": 62542950.333333336
+titanic:75
+  "Fun": #Fun<image_merge.mergeFarm.1>
+titanic:77
+  "TMP": 58617665.666666664
+titanic:75
+  "Fun": #Fun<image_merge.mergeFarmPipe.1>
+titanic:77
+  "TMP": 67527894.33333333
+Running Examples on 16 cores.
+titanic:75
+  "Fun": #Fun<image_merge.mergePipeFarm.1>
+titanic:77
+  "TMP": 72893974.66666667
+titanic:75
+  "Fun": #Fun<image_merge.mergeFarm.1>
+titanic:77
+  "TMP": 66232315.666666664
+titanic:75
+  "Fun": #Fun<image_merge.mergeFarmPipe.1>
+titanic:77
+  "TMP": 77455620.66666667
+Running Examples on 12 cores.
+titanic:75
+  "Fun": #Fun<image_merge.mergePipeFarm.1>
+titanic:77
+  "TMP": 90082190.0
+titanic:75
+  "Fun": #Fun<image_merge.mergeFarm.1>
+titanic:77
+  "TMP": 83537649.33333333
+titanic:75
+  "Fun": #Fun<image_merge.mergeFarmPipe.1>
+titanic:77
+  "TMP": 95693687.66666667
+Running Examples on 8 cores.
+titanic:75
+  "Fun": #Fun<image_merge.mergePipeFarm.1>
+titanic:77
+  "TMP": 125536835.66666667
+titanic:75
+  "Fun": #Fun<image_merge.mergeFarm.1>
+titanic:77
+  "TMP": 115476589.66666667
+titanic:75
+  "Fun": #Fun<image_merge.mergeFarmPipe.1>
+titanic:77
+  "TMP": 128153774.66666667
+Running Examples on 4 cores.
+titanic:75
+  "Fun": #Fun<image_merge.mergePipeFarm.1>
+titanic:77
+  "TMP": 234334790.33333334
+titanic:75
+  "Fun": #Fun<image_merge.mergeFarm.1>
+titanic:77
+  "TMP": 217024676.66666666
+titanic:75
+  "Fun": #Fun<image_merge.mergeFarmPipe.1>
+titanic:77
+  "TMP": 238009060.66666666
+Running Examples on 2 cores.
+titanic:75
+  "Fun": #Fun<image_merge.mergePipeFarm.1>
+titanic:77
+  "TMP": 481068051.3333333
+titanic:75
+  "Fun": #Fun<image_merge.mergeFarm.1>
+titanic:77
+  "TMP": 437018930.0
+titanic:75
+  "Fun": #Fun<image_merge.mergeFarmPipe.1>
+titanic:77
+  "TMP": 486521592.3333333
+Running Examples on 1 cores.
+titanic:75
+  "Fun": #Fun<image_merge.mergePipeFarm.1>
+titanic:77
+  "TMP": 964723325.3333334
+titanic:75
+  "Fun": #Fun<image_merge.mergeFarm.1>
+titanic:77
+  "TMP": 890743155.0
+titanic:75
+  "Fun": #Fun<image_merge.mergeFarmPipe.1>
+titanic:77
+  "TMP": 977689510.0
+titanic:59
+  "Fun": #Fun<image_merge.mergePipe.1>
+titanic:61
+  "TMP": 843514643.0
+done
+2> 
