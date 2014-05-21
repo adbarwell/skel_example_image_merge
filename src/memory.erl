@@ -23,7 +23,7 @@
 %%------------------------------------------------------------------------------
 %% Macros
 
--define(NTimes, 3).
+-define(NTimes, 1).
 -define(NImages, 100).
 
 %%------------------------------------------------------------------------------
@@ -103,14 +103,14 @@ runBinaries() ->
 
 
 run_all() ->
-    Seq = runSequential(),
-    ?print(Seq),
     Man = runManual(),
     ?print(Man),
     Lst = runLists(),
     ?print(Lst),
     Bin = runBinaries(),
-    ?print(Bin).
+    ?print(Bin),
+    Seq = runSequential(),
+    ?print(Seq).
 
 %%------------------------------------------------------------------------------
 %% Interface functions 
