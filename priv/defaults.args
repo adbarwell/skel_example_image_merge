@@ -1,1 +1,1 @@
--pa ../../erlang/erl_img/ebin ../../erlang/skel/ebin ./ebin
+-pa ../../erlang/erl_img/ebin ../../erlang/erlang-statistics/erlang/ebin ../../erlang/skel/ebin ./ebin
