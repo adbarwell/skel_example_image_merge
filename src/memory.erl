@@ -24,7 +24,7 @@
 %% Macros
 
 -define(NTimes, 3).
--define(NImages, 1).
+-define(NImages, 100).
 
 %%------------------------------------------------------------------------------
 %% Utility functions  
