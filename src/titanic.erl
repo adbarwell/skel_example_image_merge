@@ -23,7 +23,7 @@
 %%------------------------------------------------------------------------------
 %% Macros
 
--define(NTimes, 2).
+-define(NTimes, 10).
 -define(NImages, 100). 
 
 %%------------------------------------------------------------------------------
@@ -69,7 +69,7 @@ run_examples(Cores) ->
     
     %% TSeq = time(fun image_merge:merge/1),
     %% ?print(TSeq),
-    %% Speedup = speedup(TSeq),g
+    %% Speedup = speedup(TSeq),
 
     F = fun(Fun) ->
 		?print(Fun),
@@ -91,6 +91,7 @@ run_examples(Cores) ->
     done.
     
 run_manual_examples() ->
+    io:format("Manually parallelised version.~n"),
     [run_manual_example(X) || X <- [24, 20, 16, 12, 8, 4, 2, 1]],
     done.
 
@@ -106,5 +107,5 @@ run_manual_example(Cores) ->
 -spec run() -> done.
 
 run() ->
-    %% run_all_examples().
+    run_all_examples(),
     run_manual_examples().
