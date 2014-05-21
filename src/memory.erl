@@ -23,8 +23,8 @@
 %%------------------------------------------------------------------------------
 %% Macros
 
--define(NTimes, 1).
--define(NImages, 100).
+-define(NTimes, 3).
+-define(NImages, 1).
 
 %%------------------------------------------------------------------------------
 %% Utility functions  
@@ -41,7 +41,7 @@ benchmark(Fun, Arg) ->
 benchmark(Fun, Arg, Times) ->
     benchmark_1(Fun, Arg, Times, []).
     
-benchmark_1(Fun, Arg, 1, Acc) ->    
+benchmark_1(Fun, Arg, 1, Acc) ->
     LastAcc = [benchmark_1(Fun, Arg) | Acc],
     lists:sum(LastAcc) / length(LastAcc);
 benchmark_1(Fun, Arg, Times, Acc) -> 
@@ -69,11 +69,9 @@ extractCurrent([{total, [{sizes, X, _, _} | _]}]) ->
 
 helper({Fun, Arg}) ->
     ?print(Fun),
-    benchmark(Fun, Arg),
     {Fun, Arg, benchmark(Fun, Arg)};
 helper({Fun}) ->
     ?print(Fun),
-    benchmark(Fun),
     {Fun, benchmark(Fun)}.
 
 %%------------------------------------------------------------------------------
