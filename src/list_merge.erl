@@ -7,6 +7,25 @@
 -define(NW, 8).
 
 %%------------------------------------------------------------------------------
+%% Debugging 
+
+-ifndef(debug).
+-define(debug, true).
+%% -define(debug, false).
+-endif.
+
+-ifndef(print).
+-define(print(Var), case ?debug of
+			true ->
+			    io:format("~p:~p~n  ~p: ~p~n", 
+				      [?MODULE, ?LINE, ??Var, Var]);
+			false ->
+			    ok
+		    end).
+-endif.
+
+
+%%------------------------------------------------------------------------------
 %% Worker Utility Functions
 
 -spec removeAlpha(list(), atom()) -> list().
@@ -68,6 +87,8 @@ readImage({FileName, FileName2, Output}) ->
 		    atom(), string()}) -> {[list()], integer(), string()}.
 
 convertMerge({R, R2, F1, F2, Name}) ->
+    %% ?print(memsup:get_system_memory_data()),
+    %% ?print(erlang:i()),
     R1_p = lists:map(fun(L) -> removeAlpha(L, F1) end, R),
     R2_p = lists:map(fun(L2) -> removeAlpha(L2, F2) end, R2),
 
@@ -104,3 +125,8 @@ mergePipeFarm(X) ->
     skel:do([{pipe, [{farm, [{seq, fun ?MODULE:readImage/1}], ?NW}, 
 		     {farm, [{seq, fun ?MODULE:convertMerge/1}], ?NW}]}],
 	    imageList(X)).
+
+start() ->
+    application:load(sasl),
+    application:start(sasl),
+    application:start(os_mon).

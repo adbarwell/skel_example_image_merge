@@ -101,6 +101,62 @@ run_manual_example(Cores) ->
     Time = time(fun image_merge:manualMerge/1),
     ?print(Time).
 
+%% run_memory_collection_examples() ->
+%%     run_sequential_memory_example(),
+%%     run_all_manual_memory_examples(),
+%%     run_all_skel_memory_examples(),
+%%     run_all_list_memory_examples().
+%%     %% io:format("Sequential Version~n"),
+%%     %% ?print(instrument:memory_status(total)),
+%%     %% _ = sk_profile:benchmark(fun image_merge:merge/1, [?NImages], 1),
+%%     %% io:format("Post Sequential~n"),
+%%     %% ?print(instrument:memory_status(total)),
+%%     %% io:format("Manually Parallelised~n"),
+%%     %% run_manual_memory_examples
+
+%% run_sequential_memory_example() ->
+%%     io:format("Sequential Version~n"),
+%%     ?print(instrument:memory_status(total)),
+%%     _ = image_merge:merge(?NImages),
+%%     io:format("done~n"),
+%%     ?print(instrument:memory_status(total)).
+
+%% run_all_manual_memory_examples() ->
+%%     io:format("Manual Memory Examples~n"),
+%%     [run_manual_memory_examples(X) || X <- [24, 20, 16, 12, 8, 4, 2, 1]],
+%%     done.
+
+%% run_manual_memory_examples(X) ->
+%%     erlang:system_flag(schedulers_online, Cores),
+%%     io:format("Running Examples on ~p cores.~n", [Cores]),
+%%     _Time = time(fun image_merge:manualMerge/1).
+
+%% run_all_skel_memory_examples() ->
+%%     io:format("Skel Binary Memory Examples~n"),
+%%     [run_skel_memory_examples(X) || X <- [24, 20, 16, 12, 8, 4, 2, 1]],
+%%     done.
+
+%% run_skel_memory_examples(X) ->
+%%     erlang:system_flag(schedulers_online, Cores),
+%%     io:format("Running Examples on ~p cores.~n", [Cores]),
+%%     F = fun(Fun) ->
+%% 		?print(Fun),
+%% 		_Time = time(Fun, mem)
+%% 	end,
+%%     lists:map(F, [fun image_merge:mergeFarm/1,
+%% 		  fun image_merge:mergePipeFarm/1,
+%% 		  fun image_merge:mergeFarmPipe/1]).
+
+%% run_all_list_memory_examples() ->
+%%     io:format("Skel List Memory Examples~n"),
+%%     [run_list_memory_examples(X) || X <- [24, 20, 16, 12, 8, 4, 2, 1]],
+%%     done.
+
+%% run_list_memory_examples(X) ->
+%%     erlang:system_flag(schedulers_online, Cores),
+%%     io:format("Running Examples on ~p cores.~n", [Cores]),
+    
+
 %%------------------------------------------------------------------------------
 %% Interface Functions
 
@@ -109,3 +165,4 @@ run_manual_example(Cores) ->
 run() ->
     run_all_examples(),
     run_manual_examples().
+    %% run_memory_collection_examples().
