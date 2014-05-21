@@ -1,0 +1,15 @@
+src/list_merge.erl:29: Warning: this clause cannot match because a previous clause at line 24 always matches
+src/list_merge.erl:61: Warning: variable 'A' is unused
+src/list_merge.erl:66: Warning: variable 'A2' is unused
+src/titanic.erl:45: Warning: function speedup/1 is unused
+src/titanic.erl:55: Warning: function run_all_examples/0 is unused
+src/titanic.erl:66: Warning: function run_examples/1 is unused
+Eshell V5.10.3  (abort with ^G)
+1> Running Examples on 2 cores.
+titanic:102
+  "Time": 443050602.0
+Running Examples on 1 cores.
+titanic:102
+  "Time": 889133138.0
+done
+2> 
