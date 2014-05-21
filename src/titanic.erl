@@ -42,10 +42,10 @@ time(Fun, Args, once) ->
     [_, _, _, _, {mean, T}, _] = sk_profile:benchmark(Fun, Args, 1),
     T.
 
-speedup(TSeq) ->
-    fun(X) ->
-	    TSeq / X
-    end.
+%% speedup(TSeq) ->
+%%     fun(X) ->
+%% 	    TSeq / X
+%%     end.
 
 %%------------------------------------------------------------------------------
 %% Internal Interface Functions 

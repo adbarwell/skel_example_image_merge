@@ -4,7 +4,7 @@
 
 -compile([export_all]).
 
--define(NW, 4).
+-define(NW, 8).
 
 %%------------------------------------------------------------------------------
 %% Worker Utility Functions
@@ -21,11 +21,8 @@ removeAlpha(Xs, _) ->
 -spec convertToWhite(list()) -> list().
 convertToWhite([]) -> 
     [];
-convertToWhite([R,G,B | T]) ->
-    case ((R < 20) and (B < 20) and (B < 20)) of
-	true -> [ 255,255,255 | convertToWhite(T) ];
-	false -> [R,G,B | convertToWhite(T) ]
-    end;
+convertToWhite([R,G,B | T]) when R < 20, G < 20, B < 20 ->
+    [ 255,255,255 | convertToWhite(T) ];
 convertToWhite([R,G,B | T]) -> 
     [R,G,B | convertToWhite(T)].
 
@@ -58,12 +55,12 @@ imageList(N) ->
 readImage({FileName, FileName2, Output}) -> 
     {ok, _Img=#erl_image{format=F1, pixmaps=[PM]}} = erl_img:load(FileName),
     #erl_pixmap{pixels=Rows} =PM,
-    R = lists:map(fun({A,B}) -> binary_to_list(B) end, Rows),
+    R = lists:map(fun({_A,B}) -> binary_to_list(B) end, Rows),
 
     {ok, _Img2=#erl_image{format=F2, pixmaps=[PM2]}} = erl_img:load(FileName2),
     
     #erl_pixmap{pixels=Rows2} =PM2,
-    R2 = lists:map(fun({A2,B2}) -> binary_to_list(B2) end, Rows2),
+    R2 = lists:map(fun({_A2,B2}) -> binary_to_list(B2) end, Rows2),
       
     {R, R2, F1, F2, Output}.
 
@@ -88,6 +85,22 @@ convertMerge({R, R2, F1, F2, Name}) ->
 merge(X) ->
     [convertMerge(readImage(Y)) || Y <- imageList(X)].
 
+-spec mergeFarm(non_neg_integer()) -> [{[list()], integer(), string()}].
+
 mergeFarm(X) ->
     skel:do([{farm, [{seq, fun (Y) -> convertMerge(readImage(Y)) end}],
                ?NW}],imageList(X)).
+
+-spec mergeFarmPipe(non_neg_integer()) -> [{[list()], integer(), string()}].
+
+mergeFarmPipe(X) ->
+    skel:do([{farm, [{pipe, [{seq, fun ?MODULE:readImage/1}, 
+			     {seq, fun ?MODULE:convertMerge/1}]}], ?NW}],
+	    imageList(X)).
+
+-spec mergePipeFarm(non_neg_integer()) -> [{[list()], integer(), string()}].
+
+mergePipeFarm(X) ->
+    skel:do([{pipe, [{farm, [{seq, fun ?MODULE:readImage/1}], ?NW}, 
+		     {farm, [{seq, fun ?MODULE:convertMerge/1}], ?NW}]}],
+	    imageList(X)).

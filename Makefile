@@ -1,4 +1,4 @@
-.PHONY: all compile clean types typecheck
+.PHONY: all compile clean types typecheck top
 
 all: compile
 
@@ -16,3 +16,7 @@ types:
 
 typecheck:
 	@dialyzer src/*.erl
+
+top:
+	@erl -sname etop -hidden -setcookie img_merge -run etop \
+		-node image_merge@Neptune -tracing off -output text
