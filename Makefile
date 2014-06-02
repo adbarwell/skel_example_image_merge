@@ -1,4 +1,4 @@
-.PHONY: all compile clean types typecheck top
+.PHONY: all compile clean types typecheck top run
 
 all: compile
 
@@ -20,3 +20,6 @@ typecheck:
 top:
 	@erl -sname etop -hidden -setcookie img_merge -run etop \
 		-node image_merge@Neptune -tracing off -output text
+
+run: compile
+	@exec erl -args_file priv/run.args
