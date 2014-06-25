@@ -39,8 +39,13 @@ removeAlpha(<<>>, _) ->
     <<>>;
 removeAlpha(<<R,G,B,_, T/binary>>, r8g8b8a8) ->
     U = removeAlpha(T, r8g8b8a8),
-    << R,G,B, U/binary>>.
-
+    << R,G,B, U/binary>>;
+removeAlpha([], _) -> 
+    [];
+removeAlpha([R,G,B,_ | T], r8g8b8a8) ->
+    [R, G, B | removeAlpha(T, r8g8b8a8)];
+removeAlpha(Xs, _) ->
+    Xs.
 -spec convertToWhite(binary()) -> binary().
 
 convertToWhite(<<>>) -> 
@@ -53,7 +58,13 @@ convertToWhite(<<R,G,B, T/binary>>) ->
 	false -> 
 	    U = convertToWhite(T),
 	    << R,G,B, U/binary >>
-    end.
+    end;
+convertToWhite([]) -> 
+    [];
+convertToWhite([R,G,B | T]) when R < 20, G < 20, B < 20 ->
+    [ 255,255,255 | convertToWhite(T) ];
+convertToWhite([R,G,B | T]) -> 
+    [R,G,B | convertToWhite(T)].
 
 -spec mergeTwo(binary(), binary()) -> binary().
 
@@ -66,8 +77,15 @@ mergeTwo(<<255,255,255, T/binary>>, <<R2, G2, B2, T2/binary>>) ->
     <<R2,G2,B2, T3/binary>>;
 mergeTwo(<<R,G,B, T/binary>>, <<_, _, _, T2/binary>>) ->
     T3 = mergeTwo(T,T2),
-    <<R,G,B, T3/binary>>.
- 
+    <<R,G,B, T3/binary>>;
+mergeTwo([], _) -> 
+    [];
+mergeTwo(_, []) -> 
+    [];
+mergeTwo([255,255,255 | T], [R2, G2, B2 | T2]) ->
+    [R2,G2,B2 | mergeTwo(T, T2) ];
+mergeTwo([R,G,B | T], [_, _, _ | T2]) ->
+    [R,G,B | mergeTwo(T,T2)].
 
 %%------------------------------------------------------------------------------
 %% Worker Functions
@@ -82,12 +100,12 @@ imageList(N) ->
 readImage({FileName, FileName2, I}) ->
     {ok, _Img=#erl_image{format=F1, pixmaps=[PM]}} = erl_img:load(FileName),
     #erl_pixmap{pixels=Cols} =PM,
-    R = lists:map(fun({_A,B}) -> B end, Cols),
+    R = lists:map(fun({_A,B}) -> binary_to_list(B) end, Cols),
 
     {ok, _Img2=#erl_image{format=F2, pixmaps=[PM2]}} = erl_img:load(FileName2),
 
     #erl_pixmap{pixels=Cols2} =PM2,
-    R2 = lists:map(fun({_A2,B2}) -> B2 end, Cols2),
+    R2 = lists:map(fun({_A2,B2}) -> binary_to_list(B2) end, Cols2),
 
     ets:insert_new(?tab, {I, {R, R2, F1, F2}}),
     
