@@ -1,6 +1,6 @@
 -module(image_merge).
 
--include_lib("../../erlang/erl_img/include/erl_img.hrl").
+-include_lib("../../../erlang/erl_img/include/erl_img.hrl").
 
 -export([readImage/1,
 	 convertMerge/1,

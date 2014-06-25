@@ -1,6 +1,6 @@
 -module(list_merge).
 
--include("../../erlang/erl_img/include/erl_img.hrl").
+-include("../../../erlang/erl_img/include/erl_img.hrl").
 
 -compile([export_all]).
 

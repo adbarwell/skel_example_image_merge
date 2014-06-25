@@ -1,14 +1,16 @@
 -module(ets_merge).
 
--include_lib("../../erlang/erl_img/include/erl_img.hrl").
+-include_lib("../../../erlang/erl_img/include/erl_img.hrl").
 
--export([run/1,readImage/1,convertMerge/1,restore/1,create/0]).
+-export([run/1,readImage/1,convertMerge/1,restore/0,create/0]).
+
+-export([merge/1,mergeFarmPipe/1,mergeFarmPipePrime/1]).
 
 %%------------------------------------------------------------------------------
 %% Macros
 
 -define(tab, images). 
--define(nw, 24).
+-define(nw, 4).
 
 %%------------------------------------------------------------------------------
 %% Debugging 
@@ -105,11 +107,14 @@ convertMerge(I) ->
 
 %% !! This won't work (as an extra stage) -- will create the same ets for each input
 create() ->
-    ?tab = ets:new(?tab, [bag, public, named_table, {write_concurrency, true},
-		   {read_concurrency, true}]).
+    ?tab = ets:new(?tab, [set, public, named_table, {write_concurrency, true}, 
+			  {read_concurrency, true}]).
 
-restore(_) ->
-    TabLst = ets:tab2list(?tab),
+createPrime() ->
+    ?tab = ets:new(?tab, [set, public, named_table]).
+
+restore() ->
+    TabLst = lists:map(fun({_, X}) -> X end, ets:tab2list(?tab)),
     ets:delete(?tab),
     TabLst.
 
@@ -118,25 +123,35 @@ restore(_) ->
 
 merge(X) ->
     create(),
-    [restore(convertMerge(readImage(Y))) || Y <- imageList(X)].
+    [convertMerge(readImage(Y)) || Y <- imageList(X)],
+    restore().
 
-mergeFarmPipe(X) -> 
+mergeFarmPipe(X) ->
+    create(),
     skel:do([{farm, 
 	      [{seq, fun ?MODULE:readImage/1}, 
 	       {seq, fun ?MODULE:convertMerge/1}], ?nw}], 
-	    imageList(X)).
+	    imageList(X)),
+    restore().
 
 mergeFarmPipePrime(X) ->
-    create(),
-    skel:do([{farm, [{seq, fun ?MODULE:readImage/1}, 
-		     {seq, fun ?MODULE:convertMerge/1}], ?nw}, 
-	     {seq, fun ?MODULE:restore/1}], 
-	    imageList(X)).
+    createPrime(),
+    skel:do([{farm, 
+	      [{seq, fun ?MODULE:readImage/1}, 
+	       {seq, fun ?MODULE:convertMerge/1}], ?nw}], 
+	    imageList(X)),
+    restore().
+
+time(Fun, Arg) ->
+    sk_profile:benchmark(Fun, [Arg], 3).
 
 run(X) when is_integer(X) ->
-    R1 = merge(X),
-    R2 = mergeFarmPipePrime(X),
-    R1 =:= R2;
+    {time(fun ?MODULE:merge/1, X),
+     time(fun ?MODULE:mergeFarmPipe/1, X),
+     time(fun ?MODULE:mergeFarmPipePrime/1, X)};
+    %% R1 = merge(X),
+    %% R2 = mergeFarmPipe(X),
+    %% R1 =:= R2;
 run([X]) ->
     run(list_to_integer(atom_to_list(X))).
 
