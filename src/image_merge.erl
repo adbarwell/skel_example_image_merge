@@ -23,6 +23,12 @@
 	 mergePipeCluster/1
 	]).
 
+-export([tfpDecomp/1, 
+	 tfpRecomp/1, 
+	 tfpFarmPipe/2, 
+	 tfpPipeFarm/2, 
+	 tfpPipeClusterFarm/2]).
+
 %%------------------------------------------------------------------------------
 %% Macros
 
@@ -219,3 +225,38 @@ mergePipeCluster(X) ->
 		     {cluster, [{seq, fun ?MODULE:convertMerge/1}], 
 		      fun ?MODULE:decomp/1, fun ?MODULE:recomp/1}]}],
 	    imageList(X)).
+
+
+%%------------------------------------------------------------------------------
+%% TFP Interfaces
+
+tfpDecomp({[], _, _, _, _}) -> 
+    [];
+tfpDecomp({_, [], _, _, _}) ->
+    [];
+tfpDecomp({R1, R2, F1, F2, Name}) ->
+    [{[hd(R1)], [hd(R2)], F1, F2, Name}] ++ 
+                        tfpDecomp({tl(R1), tl(R2), F1, F2, Name}).
+
+tfpRecomp(Parts) -> 
+    Img = lists:map(fun({[A], _B, _C}) -> A end, Parts),
+    {_, _, Name} = hd(Parts),
+    {Img, length(Img), Name}.
+
+tfpFarmPipe(NW, NI) -> 
+    skel:do([{farm, [{seq, fun ?MODULE:readImage/1},
+		     {seq, fun ?MODULE:convertMerge/1}], NW}],
+	    imageList(NI)).
+
+tfpPipeFarm(NW, NI) ->
+    skel:do([{farm, [{seq, fun ?MODULE:readImage/1}], NW},
+	     {farm, [{seq, fun ?MODULE:convertMerge/1}], NW}],
+	    imageList(NI)).
+
+tfpPipeClusterFarm(NW, NI) ->
+    skel:do([{farm, [{seq, fun ?MODULE:readImage/1}], NW},
+	     {cluster, 
+	      [{farm, [{seq, fun ?MODULE:convertMerge/1}], NW}], 
+	      fun ?MODULE:tfpDecomp/1,
+	      fun ?MODULE:tfpRecomp/1}],
+	    imageList(NI)).

@@ -6,6 +6,12 @@
 
 -export([merge/1,mergeFarmPipe/1,mergeFarmPipePrime/1]).
 
+-export([tfpDecomp/1, 
+	 tfpRecomp/1, 
+	 tfpFarmPipe/2, 
+	 tfpPipeFarm/2, 
+	 tfpPipeClusterFarm/2]).
+
 %%------------------------------------------------------------------------------
 %% Macros
 
@@ -100,12 +106,12 @@ imageList(N) ->
 readImage({FileName, FileName2, I}) ->
     {ok, _Img=#erl_image{format=F1, pixmaps=[PM]}} = erl_img:load(FileName),
     #erl_pixmap{pixels=Cols} =PM,
-    R = lists:map(fun({_A,B}) -> binary_to_list(B) end, Cols),
+    R = lists:map(fun({_A,B}) -> B end, Cols),
 
     {ok, _Img2=#erl_image{format=F2, pixmaps=[PM2]}} = erl_img:load(FileName2),
 
     #erl_pixmap{pixels=Cols2} =PM2,
-    R2 = lists:map(fun({_A2,B2}) -> binary_to_list(B2) end, Cols2),
+    R2 = lists:map(fun({_A2,B2}) -> B2 end, Cols2),
 
     ets:insert_new(?tab, {I, {R, R2, F1, F2}}),
     
@@ -121,7 +127,9 @@ convertMerge(I) ->
   
     Result = lists:zipwith(fun(L1,L2) -> mergeTwo(L1, L2) end, WhiteR, R2_p),
 
-    ets:insert(?tab, {I, {Result}}).
+    ets:insert(?tab, {I, {Result}}),
+
+    I.
 
 %% !! This won't work (as an extra stage) -- will create the same ets for each input
 create() ->
@@ -176,3 +184,66 @@ run([X]) ->
 %% The table should probably require an extra stage in the pipeline which adds 
 %% a 'delete_all_objects' and a ets:tab2lst/1 to pass them out. 
 %% Also, add in stage for creating the table -- make sure to delete it after?
+
+
+%%------------------------------------------------------------------------------
+%% TFP Interfaces
+
+tfpDecomp({[], _, _, _}) -> 
+    [];
+tfpDecomp({_, [], _, _}) ->
+    [];
+tfpDecomp({R1, R2, F1, F2}) ->
+    [{[hd(R1)], [hd(R2)], F1, F2}] ++ 
+	tfpDecomp({tl(R1), tl(R2), F1, F2});
+tfpDecomp(I) when is_integer(I) ->
+    [{I, {R, R2, F, F2}}] = ets:lookup(?tab, I),
+    lists:map(fun({I2, Img}) ->
+		      ets:insert_new(?tab, {I2, Img}),
+		      I2
+	      end, 
+	      lists:foldl(fun(Img, Acc) ->
+				  case Acc of
+				      [] ->
+					  [{I + 1/(length(R)+1), Img}];
+				      _ ->
+					  {LI, _} = lists:last(Acc),
+					  Acc ++ [{LI + 1/(length(R)+1), Img}]
+				  end
+			  end,
+			  [],
+			  tfpDecomp({R, R2, F, F2}))).
+	      
+tfpRecomp(Indices) -> 
+    Parts = lists:map(fun(I) ->
+			      [{I, Res}] = ets:lookup(?tab, I),
+			      ets:delete(?tab, I),
+			      {I, Res}
+		      end, Indices),
+    Img = lists:map(fun({_I, {[A]}}) -> A end, Parts),
+    {I, _} = hd(Parts),
+    ets:insert(?tab, {trunc(I), {Img}}).
+
+tfpFarmPipe(NW, NI) -> 
+    create(),
+    skel:do([{farm, [{seq, fun ?MODULE:readImage/1},
+		     {seq, fun ?MODULE:convertMerge/1}], NW}],
+	    imageList(NI)),
+    restore().
+
+tfpPipeFarm(NW, NI) ->
+    create(),
+    skel:do([{farm, [{seq, fun ?MODULE:readImage/1}], NW},
+	     {farm, [{seq, fun ?MODULE:convertMerge/1}], NW}],
+	    imageList(NI)),
+    restore().
+
+tfpPipeClusterFarm(NW, NI) ->
+    create(),
+    skel:do([{farm, [{seq, fun ?MODULE:readImage/1}], NW},
+	     {cluster, 
+	      [{farm, [{seq, fun ?MODULE:convertMerge/1}], NW}], 
+	      fun ?MODULE:tfpDecomp/1,
+	      fun ?MODULE:tfpRecomp/1}],
+	    imageList(NI)),
+    restore().

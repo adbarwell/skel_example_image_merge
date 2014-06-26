@@ -1,0 +1,198 @@
+Neptune:image_merge adam$ make console
+src/titanic_tfp.erl:48: Warning: function run_all_merge_examples/2 is unused
+Erlang R16B03-1 (erts-5.10.4) [source] [64-bit] [smp:4:4] [async-threads:10] [hipe] [kernel-poll:false] [dtrace]
+
+Eshell V5.10.4  (abort with ^G)
+(image_merge@Neptune)1> titanic_tfp:run(3, 10).
+titanic_tfp:58
+  "NTimes": 3
+titanic_tfp:59
+  "NImages": 10
+ets_merge:201
+  "length ( R )": 1024
+ets_merge:201
+  "length ( R )": 1024
+ets_merge:201
+  "length ( R )": 1024
+ets_merge:201
+  "length ( R )": 1024
+ets_merge:219
+  "length ( Indices )": 1024
+ets_merge:201
+  "length ( R )": 1024
+ets_merge:219
+  "length ( Indices )": 1024
+ets_merge:201
+  "length ( R )": 1024
+ets_merge:219
+  "length ( Indices )": 1024
+ets_merge:201
+  "length ( R )": 1024
+ets_merge:219
+  "length ( Indices )": 1024
+ets_merge:201
+  "length ( R )": 1024
+ets_merge:219
+  "length ( Indices )": 1024
+ets_merge:201
+  "length ( R )": 1024
+ets_merge:219
+  "length ( Indices )": 1024
+ets_merge:219
+  "length ( Indices )": 1024
+ets_merge:219
+  "length ( Indices )": 1024
+ets_merge:201
+  "length ( R )": 1024
+ets_merge:219
+  "length ( Indices )": 1024
+ets_merge:219
+  "length ( Indices )": 1024
+ets_merge:201
+  "length ( R )": 1024
+ets_merge:201
+  "length ( R )": 1024
+ets_merge:201
+  "length ( R )": 1024
+ets_merge:201
+  "length ( R )": 1024
+ets_merge:219
+  "length ( Indices )": 1024
+ets_merge:201
+  "length ( R )": 1024
+ets_merge:201
+  "length ( R )": 1024
+ets_merge:201
+  "length ( R )": 1024
+ets_merge:219
+  "length ( Indices )": 1024
+ets_merge:201
+  "length ( R )": 1024
+ets_merge:219
+  "length ( Indices )": 1024
+ets_merge:201
+  "length ( R )": 1024
+ets_merge:219
+  "length ( Indices )": 1024
+ets_merge:219
+  "length ( Indices )": 1024
+ets_merge:201
+  "length ( R )": 1024
+ets_merge:219
+  "length ( Indices )": 1024
+ets_merge:219
+  "length ( Indices )": 1024
+ets_merge:219
+  "length ( Indices )": 1024
+ets_merge:219
+  "length ( Indices )": 1024
+ets_merge:219
+  "length ( Indices )": 1024
+ets_merge:201
+  "length ( R )": 1024
+ets_merge:201
+  "length ( R )": 1024
+ets_merge:201
+  "length ( R )": 1024
+ets_merge:201
+  "length ( R )": 1024
+ets_merge:219
+  "length ( Indices )": 1024
+ets_merge:219
+  "length ( Indices )": 1024
+ets_merge:201
+  "length ( R )": 1024
+ets_merge:219
+  "length ( Indices )": 1024
+ets_merge:219
+  "length ( Indices )": 1024
+ets_merge:201
+  "length ( R )": 1024
+ets_merge:201
+  "length ( R )": 1024
+ets_merge:219
+  "length ( Indices )": 1024
+ets_merge:201
+  "length ( R )": 1024
+ets_merge:219
+  "length ( Indices )": 1024
+ets_merge:201
+  "length ( R )": 1024
+ets_merge:219
+  "length ( Indices )": 1024
+ets_merge:219
+  "length ( Indices )": 1024
+ets_merge:219
+  "length ( Indices )": 1024
+ets_merge:201
+  "length ( R )": 1024
+ets_merge:219
+  "length ( Indices )": 1024
+titanic_tfp:60
+  "run_merge_examples ( 4 , NTimes , NImages )": {{irb,
+                                                   [{n,3},
+                                                    {min,48752363},
+                                                    {max,58839308},
+                                                    {med,50856291},
+                                                    {mean,52815987.333333336},
+                                                    {std_dev,
+                                                     5321364.688443776}]},
+                                                  {ire,
+                                                   [{n,3},
+                                                    {min,35012159},
+                                                    {max,40664130},
+                                                    {med,35145766},
+                                                    {mean,36940685.0},
+                                                    {std_dev,
+                                                     3225289.8642805736}]},
+                                                  {irbfp,
+                                                   [{n,3},
+                                                    {min,11818142},
+                                                    {max,12065973},
+                                                    {med,11818852},
+                                                    {mean,11900989.0},
+                                                    {std_dev,
+                                                     142880.7762331938}]},
+                                                  {irefp,
+                                                   [{n,3},
+                                                    {min,11340094},
+                                                    {max,12673675},
+                                                    {med,11841152},
+                                                    {mean,11951640.333333334},
+                                                    {std_dev,
+                                                     673621.0542599848}]},
+                                                  {irbpf,
+                                                   [{n,3},
+                                                    {min,12055504},
+                                                    {max,13131612},
+                                                    {med,12685693},
+                                                    {mean,12624269.666666666},
+                                                    {std_dev,
+                                                     540677.0998704619}]},
+                                                  {irepf,
+                                                   [{n,3},
+                                                    {min,11445508},
+                                                    {max,11741751},
+                                                    {med,11680522},
+                                                    {mean,11622593.666666666},
+                                                    {std_dev,
+                                                     156386.53271408423}]},
+                                                  {irbpcf,
+                                                   [{n,3},
+                                                    {min,10638184},
+                                                    {max,11340113},
+                                                    {med,11281944},
+                                                    {mean,11086747.0},
+                                                    {std_dev,
+                                                     389554.2091506649}]},
+                                                  {irepcf,
+                                                   [{n,3},
+                                                    {min,9505206},
+                                                    {max,10475358},
+                                                    {med,9537969},
+                                                    {mean,9839511.0},
+                                                    {std_dev,
+                                                     550903.2665532125}]}}
+
+done
+(image_merge@Neptune)2>

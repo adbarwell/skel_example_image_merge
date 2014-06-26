@@ -29,8 +29,8 @@
 %%------------------------------------------------------------------------------
 %% Utility functions  
 
-diff(X, Y) ->
-    X - Y.
+%% diff(X, Y) ->
+%%     X - Y.
 
 benchmark(Fun) ->
     benchmark(Fun, ?NImages, ?NTimes).
@@ -64,8 +64,8 @@ benchmark_1(Fun, Arg) ->
 extractMaxSinceLast([{total, [{sizes, _, Y, _} | _]}]) ->
     Y.
 
-extractCurrent([{total, [{sizes, X, _, _} | _]}]) ->
-    X.
+%% extractCurrent([{total, [{sizes, X, _, _} | _]}]) ->
+%%     X.
 
 helper({Fun, Arg}) ->
     ?print(Fun),
