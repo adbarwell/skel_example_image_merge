@@ -1,6 +1,7 @@
 -module(image_merge).
 
 -include_lib("../../../erlang/erl_img/include/erl_img.hrl").
+-include("../../stdhrl/include/std.hrl").
 
 -export([readImage/1,
 	 convertMerge/1,
@@ -32,7 +33,7 @@
 %%------------------------------------------------------------------------------
 %% Macros
 
--define(NW, 24).
+-define(NW, 1).
  
 %%------------------------------------------------------------------------------
 %% Worker Utility Functions
@@ -108,16 +109,24 @@ imageList(N) ->
 		       {[binary()], [binary()], atom(), atom(), string()}.
 
 readImage({FileName, FileName2, Output}) -> 
-  {ok, _Img=#erl_image{format=F1, pixmaps=[PM]}} = erl_img:load(FileName),
-  #erl_pixmap{pixels=Cols} =PM,
-  R = lists:map(fun({_A,B}) -> B end, Cols),
+    {ok, _Img=#erl_image{format=F1, pixmaps=[PM]}} = erl_img:load(FileName),
+    #erl_pixmap{pixels=Cols} =PM,
+    R = lists:map(fun({_A,B}) -> B end, Cols),
 
-  {ok, _Img2=#erl_image{format=F2, pixmaps=[PM2]}} = erl_img:load(FileName2),
+    %% ?print(byte_size(hd(R))),
+    %% ?print(erlang:system_info(garbage_collection)),
+    %% ?print(erlang:system_info(allocated_areas)),
+    %% ?print({self(), process_info(self(), memory)}),
+    %% ?print(processes()),
 
-  #erl_pixmap{pixels=Cols2} =PM2,
-  R2 = lists:map(fun({_A2,B2}) -> B2 end, Cols2),
+    {ok, _Img2=#erl_image{format=F2, pixmaps=[PM2]}} = erl_img:load(FileName2),
 
-  {R, R2, F1, F2, Output}.
+    #erl_pixmap{pixels=Cols2} =PM2,
+    R2 = lists:map(fun({_A2,B2}) -> B2 end, Cols2),
+
+    %% ?print({self(), process_info(self(), memory)}),
+    
+    {R, R2, F1, F2, Output}.
 
 -spec convertMerge({[binary()], [binary()], atom(), atom(), string()}) ->
 			  {[binary()], integer(), string()}.

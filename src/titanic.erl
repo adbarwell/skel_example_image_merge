@@ -101,6 +101,16 @@ run_manual_example(Cores) ->
     Time = time(fun image_merge:manualMerge/1),
     ?print(Time).
 
+run_jfp() ->
+    erlang:system_flag(schedulers_online, 1),
+    NImages = 20,
+    NTimes = 1,
+    TSeq = sk_profile:benchmark(fun image_merge:merge/1, [NImages], NTimes),
+    ?print(TSeq),
+    TPar = sk_profile:benchmark(fun image_merge:mergeFarm/1, [NImages], NTimes),
+    ?print(TPar).
+    
+
 %% run_memory_collection_examples() ->
 %%     run_sequential_memory_example(),
 %%     run_all_manual_memory_examples(),
@@ -163,6 +173,7 @@ run_manual_example(Cores) ->
 -spec run() -> done.
 
 run() ->
-    run_all_examples(),
-    run_manual_examples().
+    run_jfp().
+    %% run_all_examples(),
+    %% run_manual_examples().
     %% run_memory_collection_examples().

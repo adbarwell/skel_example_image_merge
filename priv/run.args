@@ -1,3 +1,5 @@
--pa ../../erlang/erl_img/ebin ../../erlang/skel/ebin ./ebin
+-pa ../../../erlang/erl_img/ebin ../../../erlang/skel/ebin ./ebin
 -noshell
--s ets_merge run 2 -s init stop
++hms 3000000
++hmbs 3000000
+-s titanic run -s init stop
